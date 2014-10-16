@@ -10,7 +10,7 @@
  */
 function ns(namespace, object) {
   var part = win,
-    parts = namespace.split(".");
+      parts = namespace.split(".");
   for (var i = 0, l = parts.length; i < l; i++) {
       if (!!object && i == l - 1) {
         part[parts[i]] = object;
@@ -23,7 +23,7 @@ function ns(namespace, object) {
   }
 
   return part;
-};
+}
 
 win.ns = {
 
@@ -47,5 +47,4 @@ win.ns = {
     return object;
   }
 };
-
 })(window);
