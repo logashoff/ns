@@ -3,17 +3,20 @@
 "use strict";
 
 /**
- * Generates namespace from string.
- * @param  {string} namespace
- * @param  {Object} object
- * @return {Object}
+ * Namespace object generator.
+ *
+ * @param {string} namespace Comma separated namespace string.
+ * @param {array} deps Dependencies array.
+ * @param {function} def Module definition.
+ * @returns {Object} Returns last part of namespace as object
+ *  or definition return value.
  */
-function ns(namespace, object) {
+function ns(namespace, deps, def) {
   var part = win,
       parts = namespace.split(".");
   for (var i = 0, l = parts.length; i < l; i++) {
-      if (!!object && i == l - 1) {
-        part[parts[i]] = object;
+      if (i == l - 1 && arguments.length > 1) {
+        return part[parts[i]] = def.apply(win, deps);
       } else {
         if (!part[parts[i]]) {
           part[parts[i]] = {};
@@ -28,9 +31,10 @@ function ns(namespace, object) {
 win.ns = {
 
   /**
-   * Creates namespace object from namespace string.
-   * @param  {string} namespace Period separated namespace.
-   * @return {Object}           Last object created from namespace.
+   * Creates nested object from namespace string.
+   *
+   * @param  {string} namespace Comma separated namespace.
+   * @return {Object} last part of namespace as object.
    */
   require: function(namespace) {
     return ns(namespace);
@@ -38,13 +42,14 @@ win.ns = {
 
   /**
    * Creates namespace object from namespace string.
-   * @param  {string} namespace Namespace string.
-   * @param  {Object} object    Object to assign last namespace part to.
-   * @return {Object}           Returns object specified as second parameter.
+   *
+   * @param {string} namespace Comma separated namespace string.
+   * @param {array} deps Dependencies array.
+   * @param {function} def Module definition.
+   * @return {Object} Returns definition return value.
    */
-  define: function(namespace, object) {
-    ns(namespace, object);
-    return object;
+  define: function(namespace, deps, def) {
+    return ns(namespace, deps, def);
   }
 };
 })(window);
