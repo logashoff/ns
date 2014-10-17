@@ -5,10 +5,10 @@
 /**
  * Namespace object generator.
  *
- * @param {string} namespace Comma separated namespace string.
- * @param {array} deps Dependencies array.
- * @param {function} def Module definition.
- * @returns {Object} Returns last part of namespace as object
+ * @param {string} namespace Dot separated namespace string.
+ * @param {array} [deps] Dependencies array.
+ * @param {function} [def] Module definition.
+ * @returns {Object} Last part of namespace as object
  *  or definition return value.
  */
 function ns(namespace, deps, def) {
@@ -33,8 +33,8 @@ win.ns = {
   /**
    * Creates nested object from namespace string.
    *
-   * @param  {string} namespace Comma separated namespace.
-   * @return {Object} last part of namespace as object.
+   * @param  {string} namespace Dot separated namespace.
+   * @return {Object} Last part of namespace as object.
    */
   require: function(namespace) {
     return ns(namespace);
@@ -43,10 +43,11 @@ win.ns = {
   /**
    * Creates namespace object from namespace string.
    *
-   * @param {string} namespace Comma separated namespace string.
-   * @param {array} deps Dependencies array.
-   * @param {function} def Module definition.
-   * @return {Object} Returns definition return value.
+   * @param {string} namespace Dot separated namespace string.
+   * @param {array} [deps] Dependencies array.
+   * @param {function} [def] Module definition.
+   * @return {Object} Definition return value or
+   *  last part of namespace if no definition is specified.
    */
   define: function(namespace, deps, def) {
     return ns(namespace, deps, def);
