@@ -1,19 +1,37 @@
 (function(win) {
 
-"use strict";
+'use strict';
+
+var nsCache = {};
 
 /**
  * Namespace object generator.
  *
- * @param {string} namespace Dot separated namespace string.
- * @param {array} [deps] Dependencies array.
- * @param {function} [def] Module definition.
- * @returns {Object} Last part of namespace as object
+ * @param {String} namespace Dot separated namespace string.
+ * @param {Array} [deps] Dependencies array.
+ * @param {Function} [def] Module definition.
+ * @return {Object} Last part of namespace as object
  *  or definition return value.
+ * @example
+ *  ns('foo.bar');
+ *  // Generates
+ *  window.foo = {
+ *    bar: {}
+ *  }
+ *
+ *  ns('foo.Bar', [window], function(win) {
+ *    return function Bar() {
+ *
+ *    };
+ *  }
+ *  // Generates
+ *  window.foo = {
+ *    Bar: function Bar() {}
+ *  }
  */
 function ns(namespace, deps, def) {
   var part = win,
-      parts = namespace.split(".");
+      parts = namespace.split('.');
   for (var i = 0, l = parts.length; i < l; i++) {
       if (i == l - 1 && arguments.length > 1) {
         return part[parts[i]] = def.apply(win, deps);
@@ -31,26 +49,32 @@ function ns(namespace, deps, def) {
 win.ns = {
 
   /**
-   * Creates nested object from namespace string.
+   * Returns object associated with a namespace.
+   * Namespace must be defined using <code>ns.define</code>.
    *
-   * @param  {string} namespace Dot separated namespace.
-   * @return {Object} Last part of namespace as object.
+   * @param  {String} namespace Defined namespace.
+   * @return {Object} Object associated with a namespace.
    */
   require: function(namespace) {
-    return ns(namespace);
+    if (!nsCache[namespace]) {
+      throw new Error('Namespace "' + namespace + '" is not defined');
+    }
+
+    return nsCache[namespace];
   },
 
   /**
-   * Creates namespace object from namespace string.
+   * Creates nested object from namespace string.
+   * Optionally assigns definition return value to namespace.
    *
-   * @param {string} namespace Dot separated namespace string.
-   * @param {array} [deps] Dependencies array.
-   * @param {function} [def] Module definition.
+   * @param {String} namespace Dot separated namespace string.
+   * @param {Array} [deps] Dependencies array.
+   * @param {Function} [def] Module definition.
    * @return {Object} Definition return value or
-   *  last part of namespace if no definition is specified.
+   *  last part of namespace as object.
    */
   define: function(namespace, deps, def) {
-    return ns(namespace, deps, def);
+    return nsCache[namespace] = ns(namespace, deps, def)
   }
 };
 })(window);
