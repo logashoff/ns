@@ -56,7 +56,7 @@ win.ns = {
    * @return {Object} Object associated with a namespace.
    */
   require: function(namespace) {
-    if (!nsCache[namespace]) {
+    if (!namespace in nsCache) {
       throw new Error('Namespace "' + namespace + '" is not defined');
     }
 
