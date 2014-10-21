@@ -33,7 +33,7 @@ function ns(namespace, deps, def) {
   var part = win,
       parts = namespace.split('.');
   for (var i = 0, l = parts.length; i < l; i++) {
-      if (i == l - 1 && arguments.length > 1) {
+      if (i == l - 1 && (typeof def === 'function')) {
         return part[parts[i]] = def.apply(win, deps);
       } else {
         if (!part[parts[i]]) {
@@ -74,7 +74,7 @@ win.ns = {
    *  last part of namespace as object.
    */
   define: function(namespace, deps, def) {
-    return nsCache[namespace] = ns(namespace, deps, def)
+    return nsCache[namespace] = ns(namespace, deps, def);
   }
 };
 })(window);
